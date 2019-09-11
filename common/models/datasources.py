@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, SmallInteger, BigInteger
 
-from .db_helper import UTCDateTime, get_base
+from ..utils.db_helper import UTCDateTime, get_base
 
 
 class Datasources(get_base()):

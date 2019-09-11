@@ -10,3 +10,10 @@ import os
 ##############################
 DB_CONNECT_URL = "mysql+pymysql://root:123456@192.168.5.106:63306/test_db"
 DB_ECHO = False
+
+##############################
+# redis 相关
+##############################
+REDIS_HOST = "192.168.5.250"
+REDIS_PORT = 16379
+REDIS_DB_INDEX = 2

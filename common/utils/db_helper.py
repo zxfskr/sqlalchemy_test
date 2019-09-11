@@ -13,7 +13,7 @@ from sqlalchemy.dialects.mysql import DATETIME
 from sqlalchemy.engine import Engine
 
 _base = declarative_base()
-_session = None
+_engine = None
 
 
 def get_base():
@@ -21,25 +21,23 @@ def get_base():
 
 
 def get_session():
-    if _session == None:
+    if _engine == None:
         raise NameError("模块未初始化.")
-    return _session
+    Session = sessionmaker(bind=_engine)
+    return Session()
 
 
 def module_init(app):
-    global _session, _base
-    engine = create_engine(app.config['DB_CONNECT_URL'],
-                           pool_size=20, pool_recycle=1800,
+    global _engine, _base
+    _engine = create_engine(app.config['DB_CONNECT_URL'],
+                           pool_size=1, pool_recycle=1800,
                            pool_pre_ping=True, echo=app.config["DB_ECHO"])
 
-    _base.metadata.create_all(engine)
+    _base.metadata.create_all(_engine)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
     _base.to_dict = to_dict
-
-    Session = sessionmaker(bind=engine)
-    _session = Session()
 
 
 class UTCDateTime(types.TypeDecorator):

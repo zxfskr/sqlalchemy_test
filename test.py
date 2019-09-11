@@ -6,10 +6,10 @@ from datetime import timezone, timedelta
 import logging
 import logging.config
 
-from models.db_helper import module_init, get_base, get_session
-from models.datasources import Datasources
-from models.users import Users
-from models.models import Models
+from common.utils.db_helper import get_session, module_init
+from common.services import user_service
+from common.models.users import Users
+from common.dao.user_dao import UserDao
 
 import config
 
@@ -18,41 +18,22 @@ logger = logging.getLogger('web')
 
 
 def main():
-    print(sqlalchemy.__version__)
+    # print(sqlalchemy.__version__)
 
     # Base = declarative_base()
-
+    app.config.from_object(config)
+    app.config.from_pyfile('config.py', silent=True)
+    app.config.from_envvar('APP_CONFIG_FILE', silent=True)
     print("start init")
     module_init(app)
-    session = get_session()
-    session.add_all([
-        Users(username="root", password=123456, displayName="管理员用户")
-    ])
+    user = Users(username="1")
+    print(user.to_dict())
+    # user_service.get_user_by_name()
 
-    print(session.new)
-    # input()
-    session.commit()
-
-    result = session.query(Users).filter_by(username="root").first()
-    # print(result)
-    print(result.to_dict())
-    tmp = result.to_dict()
-    # time = tmp["createTime"]
-    # print(time.timestamp())
-    # print(time.replace(tzinfo=timezone(timedelta(hours=0))))
-    # print(time.replace(tzinfo=timezone(timedelta(hours=0))).timestamp())
-    # print(time.astimezone(timezone.utc))
-    # print(result.__table__)
-    # print(session.dirty)
-    # print(app.config)
-    # print(Datasources.__table__)
-
-    # Base = get_base()
-    # print(Base.__subclasses__())
 
 
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(str(e))
+        logger.exception(e)

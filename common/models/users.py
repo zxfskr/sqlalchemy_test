@@ -1,6 +1,6 @@
 from sqlalchemy import text, Column, Integer, String, SmallInteger, BigInteger, UnicodeText, DateTime, TIMESTAMP
 from sqlalchemy.dialects.mysql import DATETIME, TIMESTAMP
-from .db_helper import UTCDateTime, get_base
+from ..utils.db_helper import UTCDateTime, get_base
 
 class Users(get_base()):
     __tablename__ = "users"
